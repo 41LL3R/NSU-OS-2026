@@ -5,6 +5,7 @@
 #include <grp.h>
 #include <time.h>
 #include <string.h>
+#include <inttypes.h>
 
 void print_file(const char *path) {
     struct stat st;
@@ -46,15 +47,6 @@ void print_file(const char *path) {
     const char *owner = pw ? pw->pw_name : "?";
     const char *group = gr ? gr->gr_name : "?";
 
-    char size[32];
-    if(S_ISREG(st.st_mode)) {
-        snprintf(size, sizeof(size), "%ld", (long)st.st_size);
-    }
-    else {
-        size[0] = '\0';
-    }
-
-
     char date[13];
     struct tm *tm_info = localtime(&st.st_mtime);
     if (tm_info != NULL) {
@@ -72,15 +64,18 @@ void print_file(const char *path) {
         filename = path;
     }
 
-    printf("%c%-9s %3lu %-10s %-10s %8s %-15s %s\n",
-               type,
-               permission,
-               (unsigned long)st.st_nlink,
-               owner,
-               group,
-               size,
-               date,
-               filename);
+    printf("%c%-9s %3" PRIuMAX " %-10s %-10s ",
+           type,
+           permission,
+           (uintmax_t)st.st_nlink,
+           owner,
+           group);
+
+    if (S_ISREG(st.st_mode)) {
+        printf("%" PRIdMAX, (intmax_t)st.st_size);
+    }
+
+    printf(" %-15s %s\n", date, filename);
 }
 
 int main(int argc, char *argv[]) {
