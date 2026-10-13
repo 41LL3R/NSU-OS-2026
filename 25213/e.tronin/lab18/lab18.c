@@ -72,7 +72,7 @@ void print_file(const char *path) {
            group);
 
     if (S_ISREG(st.st_mode)) {
-        printf("%" PRIdMAX, (intmax_t)st.st_size);
+        printf("%10" PRIdMAX, (intmax_t)st.st_size);
     }
 
     printf(" %-15s %s\n", date, filename);
