@@ -74,6 +74,9 @@ void print_file(const char *path) {
     if (S_ISREG(st.st_mode)) {
         printf("%10" PRIdMAX, (intmax_t)st.st_size);
     }
+    else {
+        printf("%10s", "");
+    }
 
     printf(" %-15s %s\n", date, filename);
 }
@@ -90,3 +93,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
